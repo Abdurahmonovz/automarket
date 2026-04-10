@@ -10,17 +10,17 @@ import Spinner from './components/ui/Spinner'
 
 export default function App() {
   return (
-    <Suspense fallback={<Spinner/>} >
+    <Suspense fallback={<Spinner />} >
       <Routes>
         <Route element={<ProtectRoutes />} >
-          {privateRoutes.map(item => <Route path={item?.path} element={<CheckUserRole roles={item.roles}>{ React.createElement(item?.component)}</CheckUserRole>} />)}
+          {privateRoutes.map(item => <Route path={item?.path} element={<CheckUserRole roles={item.roles}>{React.createElement(item?.component)}</CheckUserRole>} />)}
         </Route>
         <Route element={<AuthRoutes />} >
           {authRoutes.map(item => <Route path={item?.path} element={React.createElement(item?.component)} />)}
         </Route>
 
-        <Route path='/404' element={<Notfound/>}/>
-        <Route path='*' element={<Notfound/>}/>
+        <Route path='/404' element={<Notfound />} />
+        <Route path='*' element={<Notfound />} />
       </Routes>
     </Suspense>
 

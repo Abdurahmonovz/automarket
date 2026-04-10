@@ -14,7 +14,7 @@ export const privateRoutes = [
         title: "Dashboard",
         icon: LayoutDashboard,
         component: lazy(() => import("../features/dashboard/pages/DashboardPage")),
-        roles: ["admin"]
+        roles: ["ADMIN"]
 
     },
     {
@@ -22,7 +22,7 @@ export const privateRoutes = [
         title: "Users",
         icon:Users,
         component: lazy(() => import("../features/users/pages/UsersPage")),
-        roles: ["admin", "hr"]
+        roles: ["ADMIN", "hr"]
 
     },
     {
@@ -30,7 +30,7 @@ export const privateRoutes = [
         title: "Products",
         icon:Package,
         component: lazy(() => import("../features/products/pages/ProductsPage")),
-        roles: ["admin", "hr"]
+        roles: ["ADMIN", "hr"]
 
     },
     {
@@ -38,7 +38,7 @@ export const privateRoutes = [
         title: "Brands",
         icon:Tags,
         component: lazy(() => import("../features/brands/pages/BrandsPage")),
-        roles: ["admin", "hr"]
+        roles: ["ADMIN", "hr"]
 
     },
     {
@@ -46,7 +46,7 @@ export const privateRoutes = [
         title: "Models",
         icon:Car,
         component: lazy(() => import("../features/models/pages/ModelsPage")),
-        roles: ["admin", "hr"]
+        roles: ["ADMIN", "hr"]
 
     }
 ]

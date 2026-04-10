@@ -22,21 +22,11 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
-    useEffect(() => {
-        setUser({
-            id: 1,
-            phone: "+998931234567",
-            fullName: "Ali Aliyev",
-            region: "Uzbekistan",
-            city: "Tashkent",
-            role: "hr",
-            active: true,
-        });
-    }, []);
+
     const logout = () => {
         setUser(null);
         localStorage.removeItem("autocrmtoken");
-        window.location.href="/login"
+        window.location.href = "/login"
     };
 
     return (

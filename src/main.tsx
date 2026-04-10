@@ -6,6 +6,8 @@ import { BrowserRouter } from 'react-router-dom'
 import { ThemeProvider } from './context/ThemeContext.tsx'
 import { UserProvider } from './context/UserContext.tsx'
 import { SessionProvider } from './context/SessionContext.tsx'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+const queryClient = new QueryClient()
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
 
@@ -13,7 +15,10 @@ createRoot(document.getElementById('root')!).render(
       <ThemeProvider>
         <SessionProvider>
           <UserProvider>
-            <App />
+            <QueryClientProvider client={queryClient}>
+                <App />
+            </QueryClientProvider>
+          
           </UserProvider>
         </SessionProvider>
 

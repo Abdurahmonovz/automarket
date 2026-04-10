@@ -1,58 +1,27 @@
 "use client";
-
 import React, { useState } from "react";
-import { useSession } from "../../../context/SessionContext";
-import { useUser } from "../../../context/UserContext";
-import { useNavigate } from "react-router-dom";
-
+import useLogin from "../hooks/useLogin";
 export default function Login() {
-  const { setIsAuth } = useSession();
-  const { setUser } = useUser();
-  const navigate = useNavigate();
+  const { login, isPending } = useLogin()
+
 
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!phone || !password) {
-      setError("Fill all fields");
-      return;
-    }
-
-    setError("");
-    setLoading(true);
-
-    // ⏳ fake API
-    setTimeout(() => {
-      // 🔐 oddiy tekshiruv (test uchun)
-      if (phone === "+998901234567" && password === "12345") {
-        const userData = {
-          id: 1,
-          phone,
-          fullName: "Ali Aliyev",
-          region: "Tashkent",
-          city: "Tashkent",
-          role: "hr",
-          active: true,
-        };
-
-        localStorage.setItem("token", "fake_token");
-        localStorage.setItem("user", JSON.stringify(userData));
-
-        setUser(userData);
-        setIsAuth(true);
-
-        navigate("/");
-      } else {
-        setError("Invalid phone or password");
+    login({ phone, password },{
+      onSuccess:(data)=>{
+       
+        if(data?.role=="ADMIN"){
+           window.location.href="/"
+           localStorage.setItem("autocrmtoken",data?.token)
+        }
+        
       }
+    })
 
-      setLoading(false);
-    }, 1000);
   };
 
   return (
@@ -87,18 +56,15 @@ export default function Login() {
           />
         </div>
 
-        {/* Error */}
-        {error && (
-          <p className="text-red-500 text-sm text-center">{error}</p>
-        )}
+
 
         {/* Button */}
         <button
           type="submit"
-          disabled={loading}
+          disabled={isPending}
           className="bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition flex items-center justify-center"
         >
-          {loading ? (
+          {isPending ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
           ) : (
             "Login"
