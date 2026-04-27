@@ -1,7 +1,11 @@
-import React from 'react'
 
+import { Button } from 'antd';
+import UsersTable from '../components/table/UsersTable';
 export default function UsersPage() {
+
   return (
-    <div>UsersPage</div>
+    <div className=''>
+      <UsersTable/>
+    </div>
   )
 }

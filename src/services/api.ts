@@ -1,12 +1,19 @@
 import axios from "axios";
 
-const api = axios.create({
-  // baseURL: import.meta.env.REACT_APP__PUBLIC_API_BASE_URL,
-  baseURL: "https://procuratorial-phrenetically-yessenia.ngrok-free.dev/api",
-  headers: {
-    "ngrok-skip-browser-warning": "true", 
-  },
+/** Dev: same-origin `/api` → Vite proxy (avoids Chrome CORS to ngrok). Prod: full API URL. */
+const baseURL =
+  import.meta.env.DEV
+    ? "/api"
+    : (import.meta.env.VITE_API_BASE_URL ??
+      "https://procuratorial-phrenetically-yessenia.ngrok-free.dev/api");
 
+const api = axios.create({
+  baseURL,
+  headers: {
+    ...(import.meta.env.DEV
+      ? {}
+      : { "ngrok-skip-browser-warning": "true" }),
+  },
 });
 
 api.interceptors.request.use((config) => {
@@ -19,13 +26,18 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (response) => response,
-  async (err) => {
-    // const originalRequest = err.config;
-
-    // if (err.response?.status === 401 && !originalRequest._retry) {
-    //   window.location.href = "/login";
-    //   localStorage.removeItem("automarketToken");
-    // }
+  (err) => {
+    if (
+      axios.isAxiosError(err) &&
+      err.response?.status === 401 &&
+      typeof err.config?.url === "string" &&
+      !err.config.url.includes("/auth/login") &&
+      localStorage.getItem("autocrmtoken") &&
+      window.location.pathname !== "/login"
+    ) {
+      localStorage.removeItem("autocrmtoken");
+      window.location.assign("/login");
+    }
 
     return Promise.reject(err);
   },

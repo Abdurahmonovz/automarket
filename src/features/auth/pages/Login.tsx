@@ -1,27 +1,83 @@
 "use client";
 import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import useLogin from "../hooks/useLogin";
-export default function Login() {
-  const { login, isPending } = useLogin()
+import { privateRoutes } from "../../../utils/navigate";
+import { useSession } from "../../../context/SessionContext";
 
+const normalizePhone = (value: string) => {
+  const cleaned = value.replace(/\s+/g, "").trim();
+  if (!cleaned) return cleaned;
+  if (cleaned.startsWith("+")) return cleaned;
+  if (cleaned.startsWith("998")) return `+${cleaned}`;
+  return cleaned;
+};
+
+export default function Login() {
+  const { login, isPending } = useLogin();
+  const navigate = useNavigate();
+  const { setIsAuth } = useSession();
 
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage("");
+    const normalizedPhone = normalizePhone(phone);
 
-    login({ phone, password },{
-      onSuccess:(data)=>{
-       
-        if(data?.role=="ADMIN"){
-           window.location.href="/"
-           localStorage.setItem("autocrmtoken",data?.token)
-        }
-        
-      }
-    })
+    login(
+      { phone: normalizedPhone, password: password.trim() },
+      {
+        onSuccess: (data) => {
+          const token = data?.token ?? data?.accessToken ?? data?.data?.token;
+          const role = String(
+            data?.role ?? data?.user?.role ?? data?.data?.role ?? "",
+          ).trim();
 
+          if (!token) {
+            setErrorMessage("Server token qaytarmadi.");
+            return;
+          }
+
+          localStorage.setItem("autocrmtoken", token);
+          setIsAuth(true);
+
+          const firstAllowedRoute = privateRoutes.find((route) =>
+            route.roles.some(
+              (allowedRole) =>
+                allowedRole.toLowerCase() === role.toLowerCase(),
+            ),
+          );
+
+          navigate(firstAllowedRoute?.path ?? "/", { replace: true });
+        },
+        onError: (error: unknown) => {
+          if (axios.isAxiosError(error)) {
+            const payload = error.response?.data;
+            if (typeof payload === "string" && payload.trim()) {
+              setErrorMessage(payload);
+              return;
+            }
+
+            if (
+              payload &&
+              typeof payload === "object" &&
+              "message" in payload &&
+              typeof payload.message === "string" &&
+              payload.message.trim()
+            ) {
+              setErrorMessage(payload.message);
+              return;
+            }
+          }
+
+          setErrorMessage("Login yoki parol noto‘g‘ri");
+        },
+      },
+    );
   };
 
   return (
@@ -54,6 +110,8 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
             className="border rounded-lg px-3 py-2 outline-none focus:border-blue-500"
           />
+
+        
         </div>
 
 
@@ -70,6 +128,9 @@ export default function Login() {
             "Login"
           )}
         </button>
+        {errorMessage && (
+          <p className="text-sm text-red-500 text-center">{errorMessage}</p>
+        )}
       </form>
     </div>
   );
