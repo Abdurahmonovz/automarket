@@ -1,13 +1,11 @@
-import { Earth, Moon, Search, Sun, WholeWord } from 'lucide-react'
-import React, { useState } from 'react'
+import { Earth, Moon, Search, Sun } from 'lucide-react'
 import profile from "../../assets/img/profile.png"
-import world from "../../assets/svg/world.svg"
 import { useTheme } from '../../context/ThemeContext'
 import { useUser } from '../../context/UserContext'
 
 export default function Header() {
 
-  const  {theme,toggleTheme,setTheme} = useTheme()
+  const  {theme,setTheme} = useTheme()
 const {user} = useUser()
   
   return (

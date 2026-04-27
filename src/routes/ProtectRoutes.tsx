@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
 import Layout from '../components/layout/Layout'
 import useMe from '../features/auth/hooks/useMe'

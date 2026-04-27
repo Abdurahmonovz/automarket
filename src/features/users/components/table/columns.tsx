@@ -1,3 +1,13 @@
+interface UserRow {
+  id: number;
+  fullName: string;
+  phone: string;
+  region: string;
+  city: string;
+  role: string;
+  active: boolean;
+}
+
 export const columns = [
   {
     title: 'ID',
@@ -8,7 +18,7 @@ export const columns = [
     title: 'Full Name',
     dataIndex: 'fullName',
     key: 'fullName',
-    sorter: (a, b) => a.fullName.localeCompare(b.fullName),
+    sorter: (a: UserRow, b: UserRow) => a.fullName.localeCompare(b.fullName),
 
   },
   {
@@ -20,7 +30,7 @@ export const columns = [
     title: 'Region',
     dataIndex: 'region',
     key: 'region',
-        sorter: (a:any, b:any) => a.fullName.localeCompare(b.fullName),
+        sorter: (a: UserRow, b: UserRow) => a.fullName.localeCompare(b.fullName),
 
   },
   {
@@ -55,7 +65,10 @@ export const columns = [
     title: 'Action',
     dataIndex: 'action',
     key: 'action',
-    render: (active: boolean, row: any) => (
+    render: (value: boolean, row: UserRow) => (
+      (() => {
+        void value;
+        return (
       <span
         style={{
           padding: "4px 10px",
@@ -68,6 +81,8 @@ export const columns = [
       >
         {row?.active ? "Block" : "Un Block"}
       </span>
+        );
+      })()
     )
   },
 ];

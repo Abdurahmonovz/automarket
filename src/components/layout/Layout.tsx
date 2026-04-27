@@ -2,7 +2,6 @@
 import Sidebar from './Sidebar'
 import Header from './Header'
 import Main from './Main'
-import type { ReactNode } from 'react'
 
 export default function Layout() {
   return (

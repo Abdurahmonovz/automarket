@@ -1,5 +1,4 @@
 
-import { Button } from 'antd';
 import UsersTable from '../components/table/UsersTable';
 export default function UsersPage() {
 

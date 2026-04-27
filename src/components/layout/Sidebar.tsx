@@ -1,6 +1,6 @@
 
 import logo from '../../assets/svg/logo.svg'
-import { Link, NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { privateRoutes } from '../../utils/navigate'
 import { useUser } from '../../context/UserContext'
 import { LogOut } from 'lucide-react'

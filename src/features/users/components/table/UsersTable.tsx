@@ -2,12 +2,13 @@ import { Input, Table } from "antd";
 import { columns } from "./columns";
 import useUsers from "../../hooks/useUsers";
 import { useState } from "react";
+import type { User } from "../../../../context/UserContext";
 
 export default function UsersTable() {
   const { users, isLoading } = useUsers();
   const [search, setSearch] = useState("");
 
-  const filteredData = users?.filter((item) =>
+  const filteredData = users?.filter((item: User) =>
     item.fullName.toLowerCase().includes(search.toLowerCase())||
     item.phone.toLowerCase().includes(search.toLowerCase())
   );
